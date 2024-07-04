@@ -1,46 +1,45 @@
 import java.util.Scanner;
 
-public class DuplicateNumberFinder {
-
-    // Function to find the duplicate number in the array using binary search
-    public static int findDuplicate(int[] nums) {
-        int left = 1, right = nums.length - 1;
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = nums[0];
+        int fast = nums[0];
         
-        while (left < right) {
-            int mid = left + (right - left) / 2;
-            int count = 0;
-            
-            for (int num : nums) {
-                if (num <= mid) {
-                    count++;
-                }
-            }
-            
-            if (count > mid) {
-                right = mid;
-            } else {
-                left = mid + 1;
-            }
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while (slow != fast);
+        
+        slow = nums[0];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
         }
         
-        return left;
+        return slow;
     }
 
     public static void main(String[] args) {
+        Solution solution = new Solution();
         Scanner scanner = new Scanner(System.in);
-        
+
         System.out.print("Enter the number of elements in the array (n+1): ");
         int n = scanner.nextInt();
-        
+
         int[] nums = new int[n];
-        System.out.println("Enter the elements of the array:");
+        System.out.println("Enter " + n + " integers (each in the range [1, " + (n-1) + "]):");
         for (int i = 0; i < n; i++) {
-            nums[i] = scanner.nextInt();
+            int num = scanner.nextInt();
+            if (num < 1 || num > n - 1) {
+                System.out.println("Invalid input. Each number should be in the range [1, " + (n-1) + "].");
+                return;
+            }
+            nums[i] = num;
         }
-        
-        int duplicate = findDuplicate(nums);
-        System.out.println("Duplicate number: " + duplicate);
-        
+
+        int result = solution.findDuplicate(nums);
+        System.out.println("The duplicate number is: " + result);
+
         scanner.close();
     }
 }
